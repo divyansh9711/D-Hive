@@ -1,4 +1,8 @@
+using System.Linq;
+using System.Linq.Expressions;
 using System;
+using System.Collections.Generic;
+
 namespace core{
     enum SyntaxKind{
         NumberToken,
@@ -11,18 +15,24 @@ namespace core{
         CloseParenthesisToken,
         EqualToken,
         NoneToken,
-        EndOfFileToken
+        EndOfFileToken,
+        NumberExpression,
+        BinaryExpression
     }
-    class SyntaxToken{
+    class SyntaxToken : SyntaxNode{
         public SyntaxToken(SyntaxKind kind, int position, string text, Object value){
             Kind = kind;
             Position = position;
             Text = text;
             Value = value;
         }
-        public SyntaxKind Kind {get;}
+        public override SyntaxKind Kind {get;}
         public int Position {get;}
         public string Text {get;}
         public Object Value {get;}
+
+        public override IEnumerable<SyntaxNode> GetChildren(){
+            return Enumerable.Empty<SyntaxNode>();
+        }
     }
 }
