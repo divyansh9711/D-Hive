@@ -56,7 +56,7 @@ namespace core{
         }
         private ExpressionSyntax parseTerm(){
             var left = parseFactor();
-            while(Current.Kind == SyntaxKind.PlusToken || Current.Kind == SyntaxKind.MinusToken || Current.Kind == SyntaxKind.StarToken || Current.Kind == SyntaxKind.SlashToken){
+            while(Current.Kind == SyntaxKind.PlusToken || Current.Kind == SyntaxKind.MinusToken){
                 var operatorToken = NextToken();
                 var right = parseFactor();
                 left = new BinaryExpressionSyntax(left, operatorToken, right);        
@@ -78,7 +78,7 @@ namespace core{
             if (Current.Kind == SyntaxKind.OpenParenthesisToken){
                 var left = NextToken();
                 var expression = ParseExpression();
-                var right = Match(SyntaxKind.NumberToken);
+                var right = Match(SyntaxKind.CloseParenthesisToken);
                 return new ParenthesizedExpressionSyntax(left,expression,right);
             }
             var numberToken = Match(SyntaxKind.NumberToken);

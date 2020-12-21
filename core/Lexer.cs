@@ -63,10 +63,10 @@ namespace core{
                 return new SyntaxToken(SyntaxKind.EqualToken, _position++, "=", null);
             }
             else if (Current == '('){
-                return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "=", null);
+                return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
             }
             else if (Current == ')'){
-                return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, "=", null);
+                return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
             }
             _diagnostics.Add($"ERR: unrecognised character input: '{Current}");
             return new SyntaxToken(SyntaxKind.NoneToken, _position++, _text.Substring(_position -1, 1), null);

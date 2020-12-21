@@ -50,8 +50,8 @@ namespace core{
         public override SyntaxKind Kind => SyntaxKind.BinaryExpression;
         public override IEnumerable<SyntaxNode> GetChildren(){
             yield return OpenParenthesis;
-            yield return CloseParenthesis;
             yield return Expression;
+            yield return CloseParenthesis;
         }
 
 
