@@ -14,11 +14,22 @@ namespace core
                 if(string.IsNullOrWhiteSpace(line))
                     return;
                 var parser = new Parser(line);
-                var expression = parser.Parse();
+                var syntaxTree = parser.Parse();
                 var color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                PrettyPrint(expression);
+                PrettyPrint(syntaxTree.Root);
                 Console.ForegroundColor = color;
+                if (syntaxTree.Diagnostics.Any()){
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    foreach (var error in syntaxTree.Diagnostics){
+                        Console.WriteLine(error);
+                    }
+                    Console.ForegroundColor = color;
+                }else{
+                    var e = new Evaluator(syntaxTree.Root);
+                    var result = e.Evaluate();
+                    Console.WriteLine(result);
+                }
             }
         }
         static void PrettyPrint(SyntaxNode node, String indent = "", bool isLast = true){

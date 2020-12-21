@@ -32,9 +32,29 @@ namespace core{
             yield return OperatorToken;
             yield return Right;
         }
-        private ExpressionSyntax Left {get; }
-        private ExpressionSyntax Right {get; }
-        private SyntaxToken OperatorToken {get ;}
+        public ExpressionSyntax Left {get; }
+        public ExpressionSyntax Right {get; }
+        public SyntaxToken OperatorToken {get ;}
+    }
+
+    sealed class ParenthesizedExpressionSyntax: ExpressionSyntax{
+        public ParenthesizedExpressionSyntax(SyntaxToken openParenthesis, ExpressionSyntax expression, SyntaxToken closeParenthesis){
+            OpenParenthesis = openParenthesis;
+            Expression = expression;
+            CloseParenthesis = closeParenthesis;
+        }
+
+        public SyntaxToken OpenParenthesis {get;}
+        public SyntaxToken CloseParenthesis {get;}
+        public ExpressionSyntax Expression {get;}
+        public override SyntaxKind Kind => SyntaxKind.BinaryExpression;
+        public override IEnumerable<SyntaxNode> GetChildren(){
+            yield return OpenParenthesis;
+            yield return CloseParenthesis;
+            yield return Expression;
+        }
+
+
     }
     
 }

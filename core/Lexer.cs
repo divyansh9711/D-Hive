@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using System;
 
 namespace core{
     class Lexer{
         private readonly string _text;
         private int _position;
+        private List<string> _diagnostics = new List<string>();
+        public IEnumerable<string> Diagnostics => _diagnostics;
         public Lexer(string text){
             _text = text;
         }
@@ -31,7 +34,8 @@ namespace core{
 
                 var length = _position - start;
                 var text = _text.Substring(start,length);
-                int.TryParse(text,out var value);
+                if(!int.TryParse(text,out var value))
+                    _diagnostics.Add($"ERR: invalid assignment '{_text}' not valid Int32.");
                 return new SyntaxToken(SyntaxKind.NumberToken, start, text, value);
             }
             if (char.IsWhiteSpace(Current)){
@@ -64,6 +68,7 @@ namespace core{
             else if (Current == ')'){
                 return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, "=", null);
             }
+            _diagnostics.Add($"ERR: unrecognised character input: '{Current}");
             return new SyntaxToken(SyntaxKind.NoneToken, _position++, _text.Substring(_position -1, 1), null);
             
         }

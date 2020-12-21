@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace core{
     class Parser{
         private int _position;
+        private List<string> _diagnostics = new List<string>(); 
         private readonly SyntaxToken[] _tokens;
         public Parser(String text){
             var tokens = new List<SyntaxToken>();
@@ -16,7 +17,10 @@ namespace core{
                 }
             } while(token.Kind != SyntaxKind.EndOfFileToken);
             _tokens = tokens.ToArray();
+            _diagnostics.AddRange(lexer.Diagnostics);
         }
+
+        public IEnumerable<string> Diagnostics => _diagnostics;
         private SyntaxToken Peek(int offset){
             var index = _position + offset;
             if (index >= _tokens.Length){
@@ -37,12 +41,32 @@ namespace core{
             if (Current.Kind == kind){
                 return NextToken(); 
             }
+            _diagnostics.Add($"ERR: Unexpected Token: '{Current.Kind}',expected '{kind}'");
             return new SyntaxToken(kind, Current.Position, null, null);
         } 
 
-        public ExpressionSyntax Parse(){
+        public SyntaxTree Parse(){
+            var expression = parseTerm();
+            var eofToken = Match(SyntaxKind.EndOfFileToken);
+            return new SyntaxTree(expression, eofToken, _diagnostics);
+        }
+
+        private ExpressionSyntax ParseExpression(){
+            return parseTerm();
+        }
+        private ExpressionSyntax parseTerm(){
+            var left = parseFactor();
+            while(Current.Kind == SyntaxKind.PlusToken || Current.Kind == SyntaxKind.MinusToken || Current.Kind == SyntaxKind.StarToken || Current.Kind == SyntaxKind.SlashToken){
+                var operatorToken = NextToken();
+                var right = parseFactor();
+                left = new BinaryExpressionSyntax(left, operatorToken, right);        
+            }
+            return left;
+        }
+
+        private ExpressionSyntax parseFactor(){
             var left = ParsePrimaryExpression();
-            while(Current.Kind == SyntaxKind.PlusToken || Current.Kind == SyntaxKind.MinusToken){
+            while(Current.Kind == SyntaxKind.StarToken || Current.Kind == SyntaxKind.SlashToken){
                 var operatorToken = NextToken();
                 var right = ParsePrimaryExpression();
                 left = new BinaryExpressionSyntax(left, operatorToken, right);        
@@ -51,6 +75,12 @@ namespace core{
         }
 
         private ExpressionSyntax ParsePrimaryExpression(){
+            if (Current.Kind == SyntaxKind.OpenParenthesisToken){
+                var left = NextToken();
+                var expression = ParseExpression();
+                var right = Match(SyntaxKind.NumberToken);
+                return new ParenthesizedExpressionSyntax(left,expression,right);
+            }
             var numberToken = Match(SyntaxKind.NumberToken);
             return new NumberExpressionSyntax(numberToken);
         }
