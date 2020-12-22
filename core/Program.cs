@@ -5,20 +5,29 @@ namespace core
 {
     class Program
     {
-        static void Main(string[] args)
-        {
+        static void Main(string[] args){
+            var showTree = false;
             while (true)
             {
                 Console.Write(">");
                 var line = Console.ReadLine();
                 if(string.IsNullOrWhiteSpace(line))
                     return;
-                var parser = new Parser(line);
-                var syntaxTree = parser.Parse();
+                if(line == "/showtree"){
+                    showTree = !showTree;
+                    Console.WriteLine(showTree ? "Showing parse tree": "Not Showing ParseTree");
+                    continue;
+                }else if(line == "/cls"){
+                    Console.Clear();
+                    continue;
+                } 
+                var syntaxTree = SyntaxTree.Parse(line);
                 var color = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                PrettyPrint(syntaxTree.Root);
-                Console.ForegroundColor = color;
+                if(showTree){
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    PrettyPrint(syntaxTree.Root);
+                    Console.ForegroundColor = color;
+                }
                 if (syntaxTree.Diagnostics.Any()){
                     Console.ForegroundColor = ConsoleColor.DarkRed;
                     foreach (var error in syntaxTree.Diagnostics){
