@@ -2,7 +2,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
-namespace core{
+namespace core.Syntax{
     abstract class SyntaxNode{
         public abstract SyntaxKind Kind {get;}
         public abstract IEnumerable<SyntaxNode> GetChildren();
@@ -56,5 +56,19 @@ namespace core{
 
 
     }
-    
+    sealed class UnaryExpressionSyntax: ExpressionSyntax{
+        public UnaryExpressionSyntax(SyntaxToken operatorToken, ExpressionSyntax operand){
+            Operand = operand;
+            OperatorToken = operatorToken;
+        }
+        public override SyntaxKind Kind => SyntaxKind.UnaryExpressoin;
+        public override IEnumerable<SyntaxNode> GetChildren(){
+            yield return OperatorToken;
+            yield return Operand;
+        }
+        public SyntaxToken OperatorToken {get ;}
+        public ExpressionSyntax Operand {get; }
+        
+    }
+
 }

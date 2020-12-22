@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System;
 using System.Collections.Generic;
 
-namespace core{
+namespace core.Syntax{
     enum SyntaxKind{
         NumberToken,
         WhitespaceToken,
@@ -18,7 +18,8 @@ namespace core{
         EndOfFileToken,
         NumberExpression,
         BinaryExpression,
-        LiteralExpression
+        LiteralExpression,
+        UnaryExpressoin
     }
     class SyntaxToken : SyntaxNode{
         public SyntaxToken(SyntaxKind kind, int position, string text, Object value){

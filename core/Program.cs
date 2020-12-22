@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System;
-
+using core.Syntax;
 namespace core
 {
     internal static class Program

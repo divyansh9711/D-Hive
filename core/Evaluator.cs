@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using core.Syntax;
 namespace core{
     class Evaluator{
         private readonly ExpressionSyntax _root;
@@ -27,6 +27,18 @@ namespace core{
                         return left/right;
                     default:
                         throw new Exception($"EXC: Invalid operator {b.OperatorToken.Kind}");
+                }
+            }
+            if(root is UnaryExpressionSyntax u){
+                var operand = EvaluateExpression(u.Operand);
+                switch(u.OperatorToken.Kind){
+                    case SyntaxKind.PlusToken:
+                        return operand;
+                    case SyntaxKind.MinusToken:
+                        return -operand;
+                    default:
+                        throw new Exception($"EXC: Invalid operator {u.OperatorToken.Kind}");
+
                 }
             }
             if (root is ParenthesizedExpressionSyntax p){

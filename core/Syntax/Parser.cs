@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace core{
+namespace core.Syntax{
     internal sealed class Parser{
         private int _position;
         private List<string> _diagnostics = new List<string>(); 
@@ -52,7 +52,15 @@ namespace core{
         }
 
         private ExpressionSyntax ParseExpression(int parentPrecedence = 0){
-            var left = ParsePrimaryExpression();
+            ExpressionSyntax left;
+            var unaryExpressionPrecednce = Current.Kind.GetUnaryOperatorPrecednce();
+            if(unaryExpressionPrecednce != 0 && unaryExpressionPrecednce >= parentPrecedence){
+                var operatorToken = NextToken();
+                var operand = ParseExpression(unaryExpressionPrecednce);
+                left = new UnaryExpressionSyntax(operatorToken, operand);
+            }else{
+                left = ParsePrimaryExpression();
+            }
             while(true){
                 var precedence = Current.Kind.GetBinaryOperatorPrecednce();
                 if(precedence == 0 || precedence <= parentPrecedence)
