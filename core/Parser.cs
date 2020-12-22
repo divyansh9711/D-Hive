@@ -54,7 +54,7 @@ namespace core{
         private ExpressionSyntax ParseExpression(int parentPrecedence = 0){
             var left = ParsePrimaryExpression();
             while(true){
-                var precedence = GetBinaryOperatorPrecednce(Current.Kind);
+                var precedence = Current.Kind.GetBinaryOperatorPrecednce();
                 if(precedence == 0 || precedence <= parentPrecedence)
                     break;
                 var operatorToken =  NextToken();
@@ -63,20 +63,6 @@ namespace core{
             }
             return left;
         }
-
-        private static int GetBinaryOperatorPrecednce(SyntaxKind kind){
-            switch(kind){
-                case SyntaxKind.PlusToken:
-                case SyntaxKind.MinusToken:
-                    return 1;
-                case SyntaxKind.StarToken:
-                case SyntaxKind.SlashToken:
-                    return 2;
-                default:
-                    return 0;
-            }
-        }
-
         private ExpressionSyntax ParsePrimaryExpression(){
             if (Current.Kind == SyntaxKind.OpenParenthesisToken){
                 var left = NextToken();
