@@ -9,15 +9,15 @@ namespace core{
     }
     abstract class ExpressionSyntax : SyntaxNode{}
 
-    sealed class NumberExpressionSyntax: ExpressionSyntax{
-        public NumberExpressionSyntax(SyntaxToken numberToken){
-            NumberToken = numberToken;
+    sealed class LiteralExpressionSyntax: ExpressionSyntax{
+        public LiteralExpressionSyntax(SyntaxToken literalToken){
+            LietralToken = literalToken;
         }
         public override SyntaxKind Kind => SyntaxKind.NumberExpression;
         public override IEnumerable<SyntaxNode> GetChildren(){
-            yield return NumberToken;
+            yield return LietralToken;
         }
-        public SyntaxToken NumberToken {get;}    
+        public SyntaxToken LietralToken {get;}    
     }
 
     sealed class BinaryExpressionSyntax: ExpressionSyntax{

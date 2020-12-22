@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace core{
-    class Parser{
+    internal sealed class Parser{
         private int _position;
         private List<string> _diagnostics = new List<string>(); 
         private readonly SyntaxToken[] _tokens;
@@ -37,7 +37,7 @@ namespace core{
             return current;
         }
 
-        private SyntaxToken Match(SyntaxKind kind){
+        private SyntaxToken MatchToken(SyntaxKind kind){
             if (Current.Kind == kind){
                 return NextToken(); 
             }
@@ -46,8 +46,8 @@ namespace core{
         } 
 
         public SyntaxTree Parse(){
-            var expression = parseTerm();
-            var eofToken = Match(SyntaxKind.EndOfFileToken);
+            var expression = ParseExpression();
+            var eofToken = MatchToken(SyntaxKind.EndOfFileToken);
             return new SyntaxTree(expression, eofToken, _diagnostics);
         }
 
@@ -78,11 +78,11 @@ namespace core{
             if (Current.Kind == SyntaxKind.OpenParenthesisToken){
                 var left = NextToken();
                 var expression = ParseExpression();
-                var right = Match(SyntaxKind.CloseParenthesisToken);
+                var right = MatchToken(SyntaxKind.CloseParenthesisToken);
                 return new ParenthesizedExpressionSyntax(left,expression,right);
             }
-            var numberToken = Match(SyntaxKind.NumberToken);
-            return new NumberExpressionSyntax(numberToken);
+            var numberToken = MatchToken(SyntaxKind.NumberToken);
+            return new LiteralExpressionSyntax(numberToken);
         }
     }
     

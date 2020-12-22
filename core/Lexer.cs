@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System;
 
 namespace core{
-    class Lexer{
+    internal sealed class Lexer{
         private readonly string _text;
         private int _position;
         private List<string> _diagnostics = new List<string>();

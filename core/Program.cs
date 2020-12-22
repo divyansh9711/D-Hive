@@ -3,9 +3,9 @@ using System;
 
 namespace core
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args){
+        static void Main(){
             var showTree = false;
             while (true)
             {
@@ -22,18 +22,17 @@ namespace core
                     continue;
                 } 
                 var syntaxTree = SyntaxTree.Parse(line);
-                var color = Console.ForegroundColor;
                 if(showTree){
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     PrettyPrint(syntaxTree.Root);
-                    Console.ForegroundColor = color;
+                    Console.ResetColor();
                 }
                 if (syntaxTree.Diagnostics.Any()){
                     Console.ForegroundColor = ConsoleColor.DarkRed;
                     foreach (var error in syntaxTree.Diagnostics){
                         Console.WriteLine(error);
                     }
-                    Console.ForegroundColor = color;
+                    Console.ResetColor();
                 }else{
                     var e = new Evaluator(syntaxTree.Root);
                     var result = e.Evaluate();
@@ -51,7 +50,7 @@ namespace core
                 Console.Write(t.Value);
             }
             Console.WriteLine();
-            indent += isLast ? "    " : "│   ";
+            indent += isLast ? "   " : "│   ";
             var lastChild = node.GetChildren().LastOrDefault();
             indent += "    ";
             foreach (var child in node.GetChildren()){
