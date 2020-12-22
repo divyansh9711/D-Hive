@@ -17,7 +17,8 @@ namespace core{
         NoneToken,
         EndOfFileToken,
         NumberExpression,
-        BinaryExpression
+        BinaryExpression,
+        LiteralExpression
     }
     class SyntaxToken : SyntaxNode{
         public SyntaxToken(SyntaxKind kind, int position, string text, Object value){

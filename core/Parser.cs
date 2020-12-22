@@ -11,7 +11,7 @@ namespace core{
             var lexer = new Lexer(text);
             SyntaxToken token;
             do{
-                token = lexer.NextToken();
+                token = lexer.Lex();
                 if(token.Kind != SyntaxKind.WhitespaceToken && token.Kind != SyntaxKind.NoneToken){
                     tokens.Add(token);
                 }
@@ -51,27 +51,30 @@ namespace core{
             return new SyntaxTree(expression, eofToken, _diagnostics);
         }
 
-        private ExpressionSyntax ParseExpression(){
-            return parseTerm();
-        }
-        private ExpressionSyntax parseTerm(){
-            var left = parseFactor();
-            while(Current.Kind == SyntaxKind.PlusToken || Current.Kind == SyntaxKind.MinusToken){
-                var operatorToken = NextToken();
-                var right = parseFactor();
-                left = new BinaryExpressionSyntax(left, operatorToken, right);        
+        private ExpressionSyntax ParseExpression(int parentPrecedence = 0){
+            var left = ParsePrimaryExpression();
+            while(true){
+                var precedence = GetBinaryOperatorPrecednce(Current.Kind);
+                if(precedence == 0 || precedence <= parentPrecedence)
+                    break;
+                var operatorToken =  NextToken();
+                var right = ParseExpression(precedence);
+                left = new BinaryExpressionSyntax(left, operatorToken, right);
             }
             return left;
         }
 
-        private ExpressionSyntax parseFactor(){
-            var left = ParsePrimaryExpression();
-            while(Current.Kind == SyntaxKind.StarToken || Current.Kind == SyntaxKind.SlashToken){
-                var operatorToken = NextToken();
-                var right = ParsePrimaryExpression();
-                left = new BinaryExpressionSyntax(left, operatorToken, right);        
+        private static int GetBinaryOperatorPrecednce(SyntaxKind kind){
+            switch(kind){
+                case SyntaxKind.PlusToken:
+                case SyntaxKind.MinusToken:
+                    return 1;
+                case SyntaxKind.StarToken:
+                case SyntaxKind.SlashToken:
+                    return 2;
+                default:
+                    return 0;
             }
-            return left;
         }
 
         private ExpressionSyntax ParsePrimaryExpression(){
