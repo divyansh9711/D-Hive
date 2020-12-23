@@ -12,6 +12,8 @@ namespace core.Syntax{
         StarToken,
         SlashToken,
         ExclamationToken,
+        EqualEqualToken,
+        ExclamationEqualToken,
         AmpersandToken,
         PipeToken,
         OpenParenthesisToken,

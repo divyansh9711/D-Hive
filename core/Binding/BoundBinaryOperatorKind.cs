@@ -6,6 +6,8 @@ namespace core.Binding{
         Multiplication,
         Division,
         LogicalAnd,
-        LogicalOr
+        LogicalOr,
+        Equals,
+        NotEquals
     }
 }

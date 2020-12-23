@@ -12,9 +12,12 @@ namespace core.Syntax{
                 case SyntaxKind.PlusToken:
                 case SyntaxKind.MinusToken:
                     return 3;
+                case SyntaxKind.EqualEqualToken:
+                case SyntaxKind.ExclamationEqualToken:
+                    return 4;
                 case SyntaxKind.StarToken:
                 case SyntaxKind.SlashToken:
-                    return 4;
+                    return 5;
                 default:
                     return 0;
             }
@@ -24,7 +27,7 @@ namespace core.Syntax{
                 case SyntaxKind.PlusToken:
                 case SyntaxKind.MinusToken:
                 case SyntaxKind.ExclamationToken:
-                    return 5;
+                    return 6;
                 default:
                     return 0;
             }
