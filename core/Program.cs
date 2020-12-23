@@ -35,7 +35,7 @@ namespace core
                 }
                 if (diagnostics.Any()){
                     Console.ForegroundColor = ConsoleColor.DarkRed;
-                    foreach (var error in syntaxTree.Diagnostics){
+                    foreach (var error in diagnostics){
                         Console.WriteLine(error);
                     }
                     Console.ResetColor();

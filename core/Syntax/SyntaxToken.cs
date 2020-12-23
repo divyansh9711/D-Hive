@@ -19,7 +19,10 @@ namespace core.Syntax{
         NumberExpression,
         BinaryExpression,
         LiteralExpression,
-        UnaryExpression
+        UnaryExpression,
+        FalseKeyword,
+        TrueKeyword,
+        IndentiferToken
     }
     class SyntaxToken : SyntaxNode{
         public SyntaxToken(SyntaxKind kind, int position, string text, Object value){

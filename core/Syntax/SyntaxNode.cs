@@ -10,10 +10,17 @@ namespace core.Syntax{
     abstract class ExpressionSyntax : SyntaxNode{}
 
     sealed class LiteralExpressionSyntax: ExpressionSyntax{
-        public LiteralExpressionSyntax(SyntaxToken literalToken){
+        public LiteralExpressionSyntax(SyntaxToken literalToken)
+            :this(literalToken, literalToken.Value)
+        {
+
+        }
+        public LiteralExpressionSyntax(SyntaxToken literalToken, object value){
             LietralToken = literalToken;
+            Value = value;
         }
         public override SyntaxKind Kind => SyntaxKind.LiteralExpression;
+        public object Value { get; }
         public override IEnumerable<SyntaxNode> GetChildren(){
             yield return LietralToken;
         }
