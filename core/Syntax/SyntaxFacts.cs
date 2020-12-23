@@ -5,12 +5,16 @@ namespace core.Syntax{
     internal static class SyntaxFacts{
         public static int GetBinaryOperatorPrecednce(this SyntaxKind kind){
             switch(kind){
+                case SyntaxKind.PipeToken:
+                    return 1;
+                case SyntaxKind.AmpersandToken:
+                    return 2;
                 case SyntaxKind.PlusToken:
                 case SyntaxKind.MinusToken:
-                    return 1;
+                    return 3;
                 case SyntaxKind.StarToken:
                 case SyntaxKind.SlashToken:
-                    return 2;
+                    return 4;
                 default:
                     return 0;
             }
@@ -19,7 +23,8 @@ namespace core.Syntax{
             switch(kind){
                 case SyntaxKind.PlusToken:
                 case SyntaxKind.MinusToken:
-                    return 3;
+                case SyntaxKind.ExclamationToken:
+                    return 5;
                 default:
                     return 0;
             }

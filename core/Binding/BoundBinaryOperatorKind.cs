@@ -4,6 +4,8 @@ namespace core.Binding{
         Addition,
         Substraction,
         Multiplication,
-        Division
+        Division,
+        LogicalAnd,
+        LogicalOr
     }
 }

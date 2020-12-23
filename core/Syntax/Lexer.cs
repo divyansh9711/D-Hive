@@ -8,13 +8,15 @@ namespace core.Syntax{
         public Lexer(string text){
             _text = text;
         }
-        private char Current{
-            get{
-                if (_position >= _text.Length)
-                    return '\0';
-                return _text[_position];
-            }
+        private char Current => Peek(0);
+        private char LookAhead => Peek(1);
+        private char Peek(int offset){
+            var index = _position + offset;
+            if (_position >= _text.Length)
+                return '\0';
+            return _text[index];
         }
+        
         private void Next(){
             _position++;
         }
@@ -62,6 +64,17 @@ namespace core.Syntax{
                 case '*': return new SyntaxToken(SyntaxKind.StarToken, _position++, "*", null);
                 case '(': return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
                 case ')': return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
+                case '!': return new SyntaxToken(SyntaxKind.ExclamationToken, _position++, "!", null);
+                case '&':{
+                    if(LookAhead == '&') 
+                        return new SyntaxToken(SyntaxKind.AmpersandToken, _position += 2, "&&", null);
+                    break;
+                }
+                case '|':{
+                    if(LookAhead == '|') 
+                        return new SyntaxToken(SyntaxKind.PipeToken, _position += 2, "||", null);
+                    break;
+                }
             }
             _diagnostics.Add($"ERR: unrecognised character input: '{Current}");
             return new SyntaxToken(SyntaxKind.NoneToken, _position++, _text.Substring(_position -1, 1), null);
