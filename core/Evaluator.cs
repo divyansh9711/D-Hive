@@ -1,49 +1,50 @@
 using System;
 using System.Collections.Generic;
 using core.Syntax;
+using core.Binding;
 namespace core{
-    class Evaluator{
-        private readonly ExpressionSyntax _root;
-        public Evaluator (ExpressionSyntax root){
+    internal sealed  class Evaluator{
+        private readonly BoundExpression _root;
+        public Evaluator (BoundExpression root){
             _root = root;
         }
         public int Evaluate(){
             return EvaluateExpression(_root);
         }
-        private int EvaluateExpression(ExpressionSyntax root){
-            if(root is LiteralExpressionSyntax n)
-                return (int) n.LietralToken.Value;
-            if(root is BinaryExpressionSyntax b){
+        private int EvaluateExpression(BoundExpression root){
+            if(root is BoundLiteralExpression n)
+                return (int) n.Value;
+            if(root is BoundBinaryExpression b){
                 var left = EvaluateExpression(b.Left);
                 var right = EvaluateExpression(b.Right);
-                switch(b.OperatorToken.Kind){
-                    case SyntaxKind.PlusToken:
+                switch(b.OperatorKind){
+                    case BoundBinaryOperatorKind.Addition:
                         return left + right;
-                    case SyntaxKind.MinusToken:
+                    case BoundBinaryOperatorKind.Substraction:
                         return left - right;
-                    case SyntaxKind.StarToken:
+                    case BoundBinaryOperatorKind.Multiplication:
                         return left * right;
-                    case SyntaxKind.SlashToken:
+                    case BoundBinaryOperatorKind.Division:
                         return left/right;
                     default:
-                        throw new Exception($"EXC: Invalid operator {b.OperatorToken.Kind}");
+                        throw new Exception($"EXC: Invalid operator {b.OperatorKind}");
                 }
             }
-            if(root is UnaryExpressionSyntax u){
+            if(root is BoundUnaryExpression u){
                 var operand = EvaluateExpression(u.Operand);
-                switch(u.OperatorToken.Kind){
-                    case SyntaxKind.PlusToken:
+                switch(u.OperatorKind){
+                    case BoundUnaryOperatorKind.Identity:
                         return operand;
-                    case SyntaxKind.MinusToken:
+                    case BoundUnaryOperatorKind.Negation:
                         return -operand;
                     default:
-                        throw new Exception($"EXC: Invalid operator {u.OperatorToken.Kind}");
+                        throw new Exception($"EXC: Invalid operator {u.OperatorKind}");
 
                 }
             }
-            if (root is ParenthesizedExpressionSyntax p){
-                return EvaluateExpression(p.Expression);
-            }
+            // if (root is ParenthesizedExpressionSyntax p){
+            //     return EvaluateExpression(p.Expression);
+            // }
             throw new Exception($"EXC: Invalid operator {root.Kind}");
         }
     }
