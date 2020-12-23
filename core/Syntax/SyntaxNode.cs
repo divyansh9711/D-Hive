@@ -2,7 +2,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
-namespace core{
+namespace core.Syntax{
     abstract class SyntaxNode{
         public abstract SyntaxKind Kind {get;}
         public abstract IEnumerable<SyntaxNode> GetChildren();
@@ -10,10 +10,17 @@ namespace core{
     abstract class ExpressionSyntax : SyntaxNode{}
 
     sealed class LiteralExpressionSyntax: ExpressionSyntax{
-        public LiteralExpressionSyntax(SyntaxToken literalToken){
-            LietralToken = literalToken;
+        public LiteralExpressionSyntax(SyntaxToken literalToken)
+            :this(literalToken, literalToken.Value)
+        {
+
         }
-        public override SyntaxKind Kind => SyntaxKind.NumberExpression;
+        public LiteralExpressionSyntax(SyntaxToken literalToken, object value){
+            LietralToken = literalToken;
+            Value = value;
+        }
+        public override SyntaxKind Kind => SyntaxKind.LiteralExpression;
+        public object Value { get; }
         public override IEnumerable<SyntaxNode> GetChildren(){
             yield return LietralToken;
         }
@@ -56,5 +63,19 @@ namespace core{
 
 
     }
-    
+    sealed class UnaryExpressionSyntax: ExpressionSyntax{
+        public UnaryExpressionSyntax(SyntaxToken operatorToken, ExpressionSyntax operand){
+            Operand = operand;
+            OperatorToken = operatorToken;
+        }
+        public override SyntaxKind Kind => SyntaxKind.UnaryExpression;
+        public override IEnumerable<SyntaxNode> GetChildren(){
+            yield return OperatorToken;
+            yield return Operand;
+        }
+        public SyntaxToken OperatorToken {get ;}
+        public ExpressionSyntax Operand {get; }
+        
+    }
+
 }

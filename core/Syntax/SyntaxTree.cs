@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace core{
+namespace core.Syntax{
     
     sealed class SyntaxTree{
         public SyntaxTree(ExpressionSyntax root, SyntaxToken endOfFileToken, List<string> diagnostics){

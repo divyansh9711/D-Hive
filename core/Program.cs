@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System;
-
+using core.Syntax;
+using core.Binding;
+using System.Collections.Generic;
 namespace core
 {
     internal static class Program
@@ -20,21 +22,25 @@ namespace core
                 }else if(line == "/cls"){
                     Console.Clear();
                     continue;
-                } 
+                }
                 var syntaxTree = SyntaxTree.Parse(line);
+                var binder = new Binder();
+                var boundExpression = binder.BindExpression(syntaxTree.Root);
+                var diagnostics = syntaxTree.Diagnostics.Concat(binder.Diagnostics).ToArray(); 
+
                 if(showTree){
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     PrettyPrint(syntaxTree.Root);
                     Console.ResetColor();
                 }
-                if (syntaxTree.Diagnostics.Any()){
+                if (diagnostics.Any()){
                     Console.ForegroundColor = ConsoleColor.DarkRed;
-                    foreach (var error in syntaxTree.Diagnostics){
+                    foreach (var error in diagnostics){
                         Console.WriteLine(error);
                     }
                     Console.ResetColor();
                 }else{
-                    var e = new Evaluator(syntaxTree.Root);
+                    var e = new Evaluator(boundExpression);
                     var result = e.Evaluate();
                     Console.WriteLine(result);
                 }

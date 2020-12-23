@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System;
 using System.Collections.Generic;
 
-namespace core{
+namespace core.Syntax{
     enum SyntaxKind{
         NumberToken,
         WhitespaceToken,
@@ -11,13 +11,23 @@ namespace core{
         MinusToken,
         StarToken,
         SlashToken,
+        ExclamationToken,
+        EqualEqualToken,
+        ExclamationEqualToken,
+        AmpersandToken,
+        PipeToken,
         OpenParenthesisToken,
         CloseParenthesisToken,
         EqualToken,
         NoneToken,
         EndOfFileToken,
         NumberExpression,
-        BinaryExpression
+        BinaryExpression,
+        LiteralExpression,
+        UnaryExpression,
+        FalseKeyword,
+        TrueKeyword,
+        IndentiferToken
     }
     class SyntaxToken : SyntaxNode{
         public SyntaxToken(SyntaxKind kind, int position, string text, Object value){
