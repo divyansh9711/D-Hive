@@ -54,7 +54,7 @@ namespace core.Syntax{
         public SyntaxToken OpenParenthesis {get;}
         public SyntaxToken CloseParenthesis {get;}
         public ExpressionSyntax Expression {get;}
-        public override SyntaxKind Kind => SyntaxKind.BinaryExpression;
+        public override SyntaxKind Kind => SyntaxKind.ParenthesizeExpression;
         public override IEnumerable<SyntaxNode> GetChildren(){
             yield return OpenParenthesis;
             yield return Expression;

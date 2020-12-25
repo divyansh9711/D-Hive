@@ -27,7 +27,8 @@ namespace core.Syntax{
         UnaryExpression,
         FalseKeyword,
         TrueKeyword,
-        IndentiferToken
+        IndentiferToken,
+        ParenthesizeExpression
     }
     class SyntaxToken : SyntaxNode{
         public SyntaxToken(SyntaxKind kind, int position, string text, Object value){

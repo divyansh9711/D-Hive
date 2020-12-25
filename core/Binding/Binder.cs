@@ -14,6 +14,8 @@ namespace core.Binding{
                     return BindUnaryExpression((UnaryExpressionSyntax)syntax);
                 case SyntaxKind.BinaryExpression:
                     return BindBinaryExpression((BinaryExpressionSyntax)syntax);
+                case SyntaxKind.ParenthesizeExpression:
+                    return BindExpression(((ParenthesizedExpressionSyntax)syntax).Expression);
                 default: throw new Exception($"Unexpected Syntax {syntax.Kind}");
             }
         }
