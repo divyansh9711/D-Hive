@@ -21,7 +21,7 @@ namespace dhive.core{
                 return new EvaluationResult(diagnostics,null);
             var evaluator = new Evaluator(boundExpression);
             var value = evaluator.Evaluate();
-            return new EvaluationResult(Array.Empty<String>(),value);
+            return new EvaluationResult(Array.Empty<Diagnostics>(),value);
 
         }
     }

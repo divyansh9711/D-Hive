@@ -1,10 +1,11 @@
 using System;
 using dhive.core.Syntax;
+using dhive.core;
 using System.Collections.Generic;
 namespace dhive.core.Binding{
     internal sealed class Binder{
-        private readonly List<String> _diagnostics = new List<string>();
-        public IEnumerable<string> Diagnostics => _diagnostics;
+        private readonly DiagnosticsBag _diagnostics = new DiagnosticsBag();
+        public DiagnosticsBag Diagnostics => _diagnostics;
 
         public BoundExpression BindExpression(ExpressionSyntax syntax){
             switch (syntax.Kind){
@@ -28,7 +29,7 @@ namespace dhive.core.Binding{
             var boundOperand = BindExpression(syntax.Operand);
             var boundOperator = BoundUnaryOperator.Bind(syntax.OperatorToken.Kind, boundOperand.Type);
             if (boundOperator == null){
-                _diagnostics.Add($"TypeERR: Unary Operator '{syntax.OperatorToken.Text}' is not defined for type {boundOperand.Type}");
+                _diagnostics.ReportUnaryTypeError(syntax.OperatorToken.Span, syntax.OperatorToken.Text, boundOperand.Type);
                 return boundOperand;
             } 
             return new BoundUnaryExpression(boundOperator, boundOperand);
@@ -40,7 +41,7 @@ namespace dhive.core.Binding{
             var boundRight = BindExpression(syntax.Right);
             var boundOperator = BoundBinaryOperator.Bind(syntax.OperatorToken.Kind, boundLeft.Type, boundRight.Type);
             if (boundOperator == null){
-                _diagnostics.Add($"TypeERR: Binary Operator '{syntax.OperatorToken.Text}' is not defined for types {boundLeft.Type} and {boundRight.Type}");
+                _diagnostics.ReportBinaryTypeError(syntax.OperatorToken.Span, syntax.OperatorToken.Text, boundLeft.Type, boundRight.Type);
                 return boundLeft;
             }
             return new BoundBinaryExpression(boundLeft, boundOperator, boundRight);

@@ -3,8 +3,8 @@ namespace dhive.core.Syntax{
     internal sealed class Lexer{
         private readonly string _text;
         private int _position;
-        private List<string> _diagnostics = new List<string>();
-        public IEnumerable<string> Diagnostics => _diagnostics;
+        private DiagnosticsBag _diagnostics = new DiagnosticsBag();
+        public DiagnosticsBag Diagnostics => _diagnostics;
         public Lexer(string text){
             _text = text;
         }
@@ -26,20 +26,18 @@ namespace dhive.core.Syntax{
                 return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0", null);
 
             }
-
+            var start = _position;
             if(char.IsDigit(Current)){
-                var start = _position;
                 while (char.IsDigit(Current))
                     Next();
 
                 var length = _position - start;
                 var text = _text.Substring(start,length);
                 if(!int.TryParse(text,out var value))
-                    _diagnostics.Add($"ERR: invalid assignment '{_text}' not valid Int32.");
+                    _diagnostics.ReportInvalidNumber(new TextSpan(start, length), _text, typeof(int));
                 return new SyntaxToken(SyntaxKind.NumberToken, start, text, value);
             }
             if (char.IsWhiteSpace(Current)){
-                var start = _position;
                 while (char.IsWhiteSpace(Current))
                     Next();
 
@@ -48,7 +46,6 @@ namespace dhive.core.Syntax{
                 return new SyntaxToken(SyntaxKind.WhitespaceToken, start, text, null);
             }
             if (char.IsLetter(Current)){
-                var start = _position;
                 while (char.IsLetter(Current))
                     Next();
 
@@ -65,27 +62,36 @@ namespace dhive.core.Syntax{
                 case '(': return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
                 case ')': return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
                 case '&':{
-                    if(LookAhead == '&') 
-                        return new SyntaxToken(SyntaxKind.AmpersandToken, _position += 2, "&&", null);
+                    if(LookAhead == '&'){
+                        _position += 2;
+                        return new SyntaxToken(SyntaxKind.AmpersandToken, start, "&&", null);
+                    } 
                     break;
                 }
                 case '|':{
-                    if(LookAhead == '|') 
-                        return new SyntaxToken(SyntaxKind.PipeToken, _position += 2, "||", null);
+                    if(LookAhead == '|') {
+                        _position += 2;
+                        return new SyntaxToken(SyntaxKind.PipeToken, start, "||", null);
+                    }
                     break;
                 }
                 case '=':{
-                    if(LookAhead == '=') 
-                        return new SyntaxToken(SyntaxKind.EqualEqualToken, _position += 2, "==", null);
+                    if(LookAhead == '='){
+                        _position += 2;                       
+                        return new SyntaxToken(SyntaxKind.ExclamationEqualToken, start, "!=", null);
+                    } 
                     break;
                 }
                 case '!':{
-                    if(LookAhead == '=') 
-                        return new SyntaxToken(SyntaxKind.ExclamationEqualToken, _position += 2, "!=", null);
+                    if(LookAhead == '='){
+                        _position += 2;
+                         return new SyntaxToken(SyntaxKind.ExclamationEqualToken, start, "!=", null);
+
+                    } 
                     return new SyntaxToken(SyntaxKind.ExclamationToken, _position++, "!", null);
                 }
             }
-            _diagnostics.Add($"ERR: unrecognised character input: '{Current}");
+            _diagnostics.ReportUnrecognisedCharacter(_position, Current);
             return new SyntaxToken(SyntaxKind.NoneToken, _position++, _text.Substring(_position -1, 1), null);
             
         }

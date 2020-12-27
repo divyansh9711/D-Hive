@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace dhive.core.Syntax{
     internal sealed class Parser{
         private int _position;
-        private List<string> _diagnostics = new List<string>(); 
+        private DiagnosticsBag _diagnostics = new DiagnosticsBag(); 
         private readonly SyntaxToken[] _tokens;
         public Parser(String text){
             var tokens = new List<SyntaxToken>();
@@ -20,7 +20,7 @@ namespace dhive.core.Syntax{
             _diagnostics.AddRange(lexer.Diagnostics);
         }
 
-        public IEnumerable<string> Diagnostics => _diagnostics;
+        public IEnumerable<Diagnostics> Diagnostics => _diagnostics;
         private SyntaxToken Peek(int offset){
             var index = _position + offset;
             if (index >= _tokens.Length){
@@ -41,7 +41,7 @@ namespace dhive.core.Syntax{
             if (Current.Kind == kind){
                 return NextToken(); 
             }
-            _diagnostics.Add($"ERR: Unexpected Token: '{Current.Kind}',expected '{kind}'");
+            _diagnostics.ReportUnexpectedToken(Current.Span, Current.Kind, kind);
             return new SyntaxToken(kind, Current.Position, null, null);
         } 
 

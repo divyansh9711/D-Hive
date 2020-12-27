@@ -5,12 +5,12 @@ using System.Linq;
 namespace dhive.core{
    
      public sealed class EvaluationResult{
-        public EvaluationResult(IEnumerable<string> diagnostics, object value){
+        public EvaluationResult(IEnumerable<Diagnostics> diagnostics, object value){
             Diagnostics = diagnostics.ToArray();
             Value = value;
         }
 
-        public IReadOnlyList<string> Diagnostics { get; }
+        public IReadOnlyList<Diagnostics> Diagnostics { get; }
         public object Value { get; }
     }
 }
