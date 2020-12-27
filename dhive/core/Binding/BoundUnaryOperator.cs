@@ -1,7 +1,7 @@
 using System;
-using core.Syntax;
+using dhive.core.Syntax;
 
-namespace core.Binding{
+namespace dhive.core.Binding{
     internal sealed class BoundUnaryOperator{
         private BoundUnaryOperator(SyntaxKind syntax, BoundUnaryOperatorKind kind, Type operandType, Type resultType)
         {

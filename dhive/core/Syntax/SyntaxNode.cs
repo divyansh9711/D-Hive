@@ -2,14 +2,14 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
-namespace core.Syntax{
-    abstract class SyntaxNode{
+namespace dhive.core.Syntax{
+    public abstract class SyntaxNode{
         public abstract SyntaxKind Kind {get;}
         public abstract IEnumerable<SyntaxNode> GetChildren();
     }
-    abstract class ExpressionSyntax : SyntaxNode{}
+    public abstract class ExpressionSyntax : SyntaxNode{}
 
-    sealed class LiteralExpressionSyntax: ExpressionSyntax{
+    public sealed class LiteralExpressionSyntax: ExpressionSyntax{
         public LiteralExpressionSyntax(SyntaxToken literalToken)
             :this(literalToken, literalToken.Value)
         {
@@ -27,7 +27,7 @@ namespace core.Syntax{
         public SyntaxToken LietralToken {get;}    
     }
 
-    sealed class BinaryExpressionSyntax: ExpressionSyntax{
+    public sealed class BinaryExpressionSyntax: ExpressionSyntax{
         public BinaryExpressionSyntax(ExpressionSyntax left, SyntaxToken operatorToken, ExpressionSyntax right){
             Left = left;    
             Right = right;
@@ -44,7 +44,7 @@ namespace core.Syntax{
         public SyntaxToken OperatorToken {get ;}
     }
 
-    sealed class ParenthesizedExpressionSyntax: ExpressionSyntax{
+    public sealed class ParenthesizedExpressionSyntax: ExpressionSyntax{
         public ParenthesizedExpressionSyntax(SyntaxToken openParenthesis, ExpressionSyntax expression, SyntaxToken closeParenthesis){
             OpenParenthesis = openParenthesis;
             Expression = expression;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using core.Syntax;
-using core.Binding;
+using dhive.core.Binding;
+using dhive.core.Syntax;
 namespace core{
     internal sealed  class Evaluator{
         private readonly BoundExpression _root;

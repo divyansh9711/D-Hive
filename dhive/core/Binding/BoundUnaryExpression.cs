@@ -1,5 +1,5 @@
 using System;    
-namespace core.Binding{
+namespace dhive.core.Binding{
     internal sealed class BoundUnaryExpression:BoundExpression{
         public BoundUnaryExpression(BoundUnaryOperator op, BoundExpression operand){
             Op = op;

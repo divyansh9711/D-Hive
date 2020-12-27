@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace core.Syntax{
+namespace dhive.core.Syntax{
     internal static class SyntaxFacts{
         public static int GetBinaryOperatorPrecednce(this SyntaxKind kind){
             switch(kind){

@@ -1,4 +1,4 @@
-namespace core.Binding{
+namespace dhive.core.Binding{
     internal enum BoundNodeKind{
         LiteralExpression,
         UnaryExpression,

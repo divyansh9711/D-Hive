@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-namespace core.Syntax{
+namespace dhive.core.Syntax{
     internal sealed class Lexer{
         private readonly string _text;
         private int _position;

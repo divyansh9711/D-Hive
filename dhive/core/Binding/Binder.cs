@@ -1,7 +1,7 @@
 using System;
-using core.Syntax;
+using dhive.core.Syntax;
 using System.Collections.Generic;
-namespace core.Binding{
+namespace dhive.core.Binding{
     internal sealed class Binder{
         private readonly List<String> _diagnostics = new List<string>();
         public IEnumerable<string> Diagnostics => _diagnostics;

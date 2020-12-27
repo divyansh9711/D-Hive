@@ -3,8 +3,8 @@ using System.Linq.Expressions;
 using System;
 using System.Collections.Generic;
 
-namespace core.Syntax{
-    enum SyntaxKind{
+namespace dhive.core.Syntax{
+    public enum SyntaxKind{
         NumberToken,
         WhitespaceToken,
         PlusToken,
@@ -30,7 +30,7 @@ namespace core.Syntax{
         IndentiferToken,
         ParenthesizeExpression
     }
-    class SyntaxToken : SyntaxNode{
+    public class SyntaxToken : SyntaxNode{
         public SyntaxToken(SyntaxKind kind, int position, string text, Object value){
             Kind = kind;
             Position = position;

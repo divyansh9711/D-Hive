@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using System;
-using core.Syntax;
-using core.Binding;
-using System.Collections.Generic;
+using dhive.core.Syntax;
+using dhive.core;
 namespace core
 {
     internal static class Program
@@ -24,9 +23,9 @@ namespace core
                     continue;
                 }
                 var syntaxTree = SyntaxTree.Parse(line);
-                var binder = new Binder();
-                var boundExpression = binder.BindExpression(syntaxTree.Root);
-                var diagnostics = syntaxTree.Diagnostics.Concat(binder.Diagnostics).ToArray(); 
+                var compiler = new Compiler(syntaxTree);
+                var result = compiler.Evaluate();
+                var diagnostics = result.Diagnostics;
 
                 if(showTree){
                     Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -40,9 +39,7 @@ namespace core
                     }
                     Console.ResetColor();
                 }else{
-                    var e = new Evaluator(boundExpression);
-                    var result = e.Evaluate();
-                    Console.WriteLine(result);
+                    Console.WriteLine(result.Value);
                 }
             }
         }

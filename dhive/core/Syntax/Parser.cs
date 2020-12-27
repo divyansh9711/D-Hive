@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace core.Syntax{
+namespace dhive.core.Syntax{
     internal sealed class Parser{
         private int _position;
         private List<string> _diagnostics = new List<string>(); 
