@@ -101,6 +101,11 @@ namespace dhive.core.Syntax{
                 }
                 case SyntaxKind.IndentiferToken:{
                     var identifierToken = NextToken();
+                    if(Peek(0).Kind == SyntaxKind.EqualToken){
+                        var operatorToken = NextToken();
+                        var right = ParsePrimaryExpression();
+                        return new AssignmentExpressionSyntax(identifierToken, identifierToken, right); 
+                    }
                     return new NameExpressionSyntax(identifierToken);
                 }
                 default:{
