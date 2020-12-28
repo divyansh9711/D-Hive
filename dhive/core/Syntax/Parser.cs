@@ -51,12 +51,12 @@ namespace dhive.core.Syntax{
             return new SyntaxTree(expression, eofToken, _diagnostics);
         }
 
-        private ExpressionSyntax ParseExpression(int parentPrecedence = 0){
+        private ExpressionSyntax ParseBinaryExpression(int parentPrecedence = 0){
             ExpressionSyntax left;
             var unaryExpressionPrecednce = Current.Kind.GetUnaryOperatorPrecednce();
             if(unaryExpressionPrecednce != 0 && unaryExpressionPrecednce >= parentPrecedence){
                 var operatorToken = NextToken();
-                var operand = ParseExpression(unaryExpressionPrecednce);
+                var operand = ParseBinaryExpression(unaryExpressionPrecednce);
                 left = new UnaryExpressionSyntax(operatorToken, operand);
             }else{
                 left = ParsePrimaryExpression();
@@ -66,16 +66,30 @@ namespace dhive.core.Syntax{
                 if(precedence == 0 || precedence <= parentPrecedence)
                     break;
                 var operatorToken =  NextToken();
-                var right = ParseExpression(precedence);
+                var right = ParseBinaryExpression(precedence);
                 left = new BinaryExpressionSyntax(left, operatorToken, right);
             }
             return left;
         }
+
+        private ExpressionSyntax ParseExpression() => ParseAssignmentExpression();
+
+        private ExpressionSyntax ParseAssignmentExpression()
+        {
+            if(Peek(0).Kind == SyntaxKind.IndentiferToken && Peek(1).Kind == SyntaxKind.EqualToken){
+                var left = NextToken();
+                var operatorToken = NextToken();
+                var right = ParseAssignmentExpression();
+                return new AssignmentExpressionSyntax(left, operatorToken, right);
+            }
+            return ParseBinaryExpression();
+        }
+
         private ExpressionSyntax ParsePrimaryExpression(){
             switch(Current.Kind){
                 case SyntaxKind.OpenParenthesisToken:{
                        var left = NextToken();
-                    var expression = ParseExpression();
+                    var expression = ParseBinaryExpression();
                     var right = MatchToken(SyntaxKind.CloseParenthesisToken);
                     return new ParenthesizedExpressionSyntax(left,expression,right);
                 }
@@ -84,6 +98,10 @@ namespace dhive.core.Syntax{
                     var keywordToken = NextToken();
                     var value = keywordToken.Kind == SyntaxKind.TrueKeyword;
                     return new LiteralExpressionSyntax(keywordToken, value);
+                }
+                case SyntaxKind.IndentiferToken:{
+                    var identifierToken = NextToken();
+                    return new NameExpressionSyntax(identifierToken);
                 }
                 default:{
                     var numberToken = MatchToken(SyntaxKind.NumberToken);

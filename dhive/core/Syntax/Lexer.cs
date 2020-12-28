@@ -80,7 +80,7 @@ namespace dhive.core.Syntax{
                         _position += 2;                       
                         return new SyntaxToken(SyntaxKind.ExclamationEqualToken, start, "!=", null);
                     } 
-                    break;
+                    return new SyntaxToken(SyntaxKind.EqualToken, _position++, "=", null);
                 }
                 case '!':{
                     if(LookAhead == '='){

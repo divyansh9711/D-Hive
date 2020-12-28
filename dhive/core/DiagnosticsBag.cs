@@ -25,24 +25,30 @@ namespace dhive.core
             _diagnostics.AddRange(diagnostics._diagnostics);
         }
 
-        internal void ReportUnrecognisedCharacter(int position, char character){
+        public void ReportUnrecognisedCharacter(int position, char character){
             var message = $"ERR: Unrecognised Character, {character}";
             Report(new TextSpan(position, 1), message);
         }
 
-        internal void ReportUnexpectedToken(TextSpan span, SyntaxKind found, SyntaxKind expected){
+        public void ReportUnexpectedToken(TextSpan span, SyntaxKind found, SyntaxKind expected){
             var message = $"ERR: Unexpected Token: '{found}',expected '{expected}'";
             Report(span, message);
         }
 
-        internal void ReportUnaryTypeError(TextSpan span, string text, Type type)
+        public void ReportUnaryTypeError(TextSpan span, string text, Type type)
         {
             var message =   $"TypeERR: Unary Operator '{text}' is not defined for type {type}";
             Report(span, message);
         }
 
-        internal void ReportBinaryTypeError(TextSpan span, string text, Type leftType, Type rightType){
+        public void ReportBinaryTypeError(TextSpan span, string text, Type leftType, Type rightType){
             var message =   $"TypeERR: Binary Operator '{text}' is not defined for type {leftType} and {rightType}";
+            Report(span, message);        
+        }
+
+        public void ReportUndefinedName(TextSpan span, string text)
+        {
+            var message = $"NameERR: Variable '{text}' dose not exist";
             Report(span, message);        
         }
     }

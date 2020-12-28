@@ -2,12 +2,15 @@
 using System;
 using dhive.core.Syntax;
 using dhive.core;
+using System.Collections.Generic;
+
 namespace core
 {
     internal static class Program
     {
         static void Main(){
             var showTree = false;
+            var variables = new Dictionary<VariableSymbol, object>();
             while (true)
             {
                 Console.Write(">");
@@ -24,7 +27,7 @@ namespace core
                 }
                 var syntaxTree = SyntaxTree.Parse(line);
                 var compiler = new Compiler(syntaxTree);
-                var result = compiler.Evaluate();
+                var result = compiler.Evaluate(variables);
                 var diagnostics = result.Diagnostics;
                 if(showTree){
                     Console.ForegroundColor = ConsoleColor.DarkGray;
