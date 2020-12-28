@@ -1,0 +1,31 @@
+namespace dhive.core.Syntax
+{
+    public enum SyntaxKind{
+        NumberToken,
+        WhitespaceToken,
+        PlusToken,
+        MinusToken,
+        StarToken,
+        SlashToken,
+        ExclamationToken,
+        EqualEqualToken,
+        ExclamationEqualToken,
+        AmpersandToken,
+        PipeToken,
+        OpenParenthesisToken,
+        CloseParenthesisToken,
+        EqualToken,
+        NoneToken,
+        EndOfFileToken,
+        NumberExpression,
+        BinaryExpression,
+        LiteralExpression,
+        UnaryExpression,
+        FalseKeyword,
+        TrueKeyword,
+        IndentiferToken,
+        ParenthesizeExpression,
+        NameExpression,
+        AssignmentExpression
+    }
+}

@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
-using core.Syntax;
-using core.Binding;
+using dhive.core.Binding;
+using dhive.core.Syntax;
+using dhive.core;
 namespace core{
     internal sealed  class Evaluator{
         private readonly BoundExpression _root;
-        public Evaluator (BoundExpression root){
+        private readonly Dictionary<VariableSymbol, object> _variables;
+
+        public Evaluator (BoundExpression root, Dictionary<VariableSymbol, object> variables)
+        {
             _root = root;
+            _variables = variables;
         }
         public object Evaluate(){
             return EvaluateExpression(_root);
@@ -14,6 +19,13 @@ namespace core{
         private object EvaluateExpression(BoundExpression root){
             if(root is BoundLiteralExpression n)
                 return n.Value;
+            if(root is BoundVariableExpression v)
+                return _variables[v.Variable];
+            if(root is BoundAssignmentExpression a){
+                var value = EvaluateExpression(a.Expression);
+                _variables[a.Variable] = value;
+                return value;
+            }
             if(root is BoundBinaryExpression b){
                 var left = EvaluateExpression(b.Left);
                 var right = EvaluateExpression(b.Right);

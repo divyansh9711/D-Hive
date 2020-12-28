@@ -1,7 +1,7 @@
 using System;
-using core.Binding;
-using core.Syntax;
-namespace core.Binding{
+using dhive.core.Binding;
+using dhive.core.Syntax;
+namespace dhive.core.Binding{
     internal sealed class BoundBinaryOperator{
         private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type leftType, Type rightType, Type resultType)
         {

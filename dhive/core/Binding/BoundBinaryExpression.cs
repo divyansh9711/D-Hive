@@ -1,5 +1,5 @@
 using System;
-namespace core.Binding{
+namespace dhive.core.Binding{
     internal sealed class BoundBinaryExpression:BoundExpression{
         public BoundBinaryExpression(BoundExpression left, BoundBinaryOperator op, BoundExpression right){
             Op = op;

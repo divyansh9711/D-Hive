@@ -1,5 +1,5 @@
 using System;
-namespace core.Binding{
+namespace dhive.core.Binding{
     internal sealed class BoundLiteralExpression: BoundExpression{
         public BoundLiteralExpression(Object value){
             Value = value;

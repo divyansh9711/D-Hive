@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace core.Syntax{
+namespace dhive.core.Syntax{
     internal sealed class Parser{
         private int _position;
-        private List<string> _diagnostics = new List<string>(); 
+        private DiagnosticsBag _diagnostics = new DiagnosticsBag(); 
         private readonly SyntaxToken[] _tokens;
         public Parser(String text){
             var tokens = new List<SyntaxToken>();
@@ -20,7 +20,7 @@ namespace core.Syntax{
             _diagnostics.AddRange(lexer.Diagnostics);
         }
 
-        public IEnumerable<string> Diagnostics => _diagnostics;
+        public IEnumerable<Diagnostics> Diagnostics => _diagnostics;
         private SyntaxToken Peek(int offset){
             var index = _position + offset;
             if (index >= _tokens.Length){
@@ -41,7 +41,7 @@ namespace core.Syntax{
             if (Current.Kind == kind){
                 return NextToken(); 
             }
-            _diagnostics.Add($"ERR: Unexpected Token: '{Current.Kind}',expected '{kind}'");
+            _diagnostics.ReportUnexpectedToken(Current.Span, Current.Kind, kind);
             return new SyntaxToken(kind, Current.Position, null, null);
         } 
 
@@ -51,12 +51,12 @@ namespace core.Syntax{
             return new SyntaxTree(expression, eofToken, _diagnostics);
         }
 
-        private ExpressionSyntax ParseExpression(int parentPrecedence = 0){
+        private ExpressionSyntax ParseBinaryExpression(int parentPrecedence = 0){
             ExpressionSyntax left;
             var unaryExpressionPrecednce = Current.Kind.GetUnaryOperatorPrecednce();
             if(unaryExpressionPrecednce != 0 && unaryExpressionPrecednce >= parentPrecedence){
                 var operatorToken = NextToken();
-                var operand = ParseExpression(unaryExpressionPrecednce);
+                var operand = ParseBinaryExpression(unaryExpressionPrecednce);
                 left = new UnaryExpressionSyntax(operatorToken, operand);
             }else{
                 left = ParsePrimaryExpression();
@@ -66,16 +66,30 @@ namespace core.Syntax{
                 if(precedence == 0 || precedence <= parentPrecedence)
                     break;
                 var operatorToken =  NextToken();
-                var right = ParseExpression(precedence);
+                var right = ParseBinaryExpression(precedence);
                 left = new BinaryExpressionSyntax(left, operatorToken, right);
             }
             return left;
         }
+
+        private ExpressionSyntax ParseExpression() => ParseAssignmentExpression();
+
+        private ExpressionSyntax ParseAssignmentExpression()
+        {
+            if(Peek(0).Kind == SyntaxKind.IndentiferToken && Peek(1).Kind == SyntaxKind.EqualToken){
+                var left = NextToken();
+                var operatorToken = NextToken();
+                var right = ParseAssignmentExpression();
+                return new AssignmentExpressionSyntax(left, operatorToken, right);
+            }
+            return ParseBinaryExpression();
+        }
+
         private ExpressionSyntax ParsePrimaryExpression(){
             switch(Current.Kind){
                 case SyntaxKind.OpenParenthesisToken:{
                        var left = NextToken();
-                    var expression = ParseExpression();
+                    var expression = ParseBinaryExpression();
                     var right = MatchToken(SyntaxKind.CloseParenthesisToken);
                     return new ParenthesizedExpressionSyntax(left,expression,right);
                 }
@@ -84,6 +98,10 @@ namespace core.Syntax{
                     var keywordToken = NextToken();
                     var value = keywordToken.Kind == SyntaxKind.TrueKeyword;
                     return new LiteralExpressionSyntax(keywordToken, value);
+                }
+                case SyntaxKind.IndentiferToken:{
+                    var identifierToken = NextToken();
+                    return new NameExpressionSyntax(identifierToken);
                 }
                 default:{
                     var numberToken = MatchToken(SyntaxKind.NumberToken);
