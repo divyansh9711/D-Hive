@@ -10,8 +10,10 @@ namespace dhive.test.core.Syntax
         [Theory]
         [MemberData(nameof(GetTokensData))]
         public void Lexer_Lex_Test(SyntaxKind kind, string text){
-            var tokens = SyntaxTree.Parse(text);
-            
+            var tokens = SyntaxTree.ParseToken(text);
+            var token = Assert.Single(tokens);
+            Assert.Equal(kind, token.Kind);
+            Assert.Equal(text, token.Text);
         }
 
         public static IEnumerable<Object[]> GetTokensData(){
@@ -22,11 +24,35 @@ namespace dhive.test.core.Syntax
 
         private static IEnumerable<(SyntaxKind kind,string text)> GetTokens(){
             return new[]{
+
+                
+                (SyntaxKind.PlusToken, "+"),
+                (SyntaxKind.MinusToken, "-"),
+                (SyntaxKind.StarToken, "*"),
+                (SyntaxKind.SlashToken, "/"),
+                (SyntaxKind.ExclamationToken, "!"),
+                (SyntaxKind.EqualEqualToken, "=="),
+                (SyntaxKind.ExclamationEqualToken, "!="),
+                (SyntaxKind.AmpersandAmpersandToken, "&&"),
+                (SyntaxKind.PipePipeToken, "||"),
+                (SyntaxKind.OpenParenthesisToken, "("),
+                (SyntaxKind.CloseParenthesisToken, ")"),
+                (SyntaxKind.EqualToken, "="),
+                (SyntaxKind.FalseKeyword, "false"),
+                (SyntaxKind.TrueKeyword, "true"),
+
+                (SyntaxKind.WhitespaceToken, " "),
+                (SyntaxKind.WhitespaceToken, "  "),
+                (SyntaxKind.WhitespaceToken, "\r"),
+                (SyntaxKind.WhitespaceToken, "\n"),
+                (SyntaxKind.WhitespaceToken, "\r\n"),
                 (SyntaxKind.IndentiferToken, "abc"),
                 (SyntaxKind.IndentiferToken, "a"),
-                (SyntaxKind.IndentiferToken, "asdf"),
-                (SyntaxKind.IndentiferToken, "adfcv")
+                (SyntaxKind.NumberToken, "1"),
+                (SyntaxKind.NumberToken, "23"),
+                
             };
+
         }
     }
 }

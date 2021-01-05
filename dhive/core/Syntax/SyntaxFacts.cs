@@ -5,9 +5,9 @@ namespace dhive.core.Syntax{
     internal static class SyntaxFacts{
         public static int GetBinaryOperatorPrecednce(this SyntaxKind kind){
             switch(kind){
-                case SyntaxKind.PipeToken:
+                case SyntaxKind.PipePipeToken:
                     return 1;
-                case SyntaxKind.AmpersandToken:
+                case SyntaxKind.AmpersandAmpersandToken:
                     return 2;
                 case SyntaxKind.PlusToken:
                 case SyntaxKind.MinusToken:
