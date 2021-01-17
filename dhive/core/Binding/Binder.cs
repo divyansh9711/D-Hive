@@ -42,7 +42,7 @@ namespace dhive.core.Binding{
                 _variables.Remove(existingVariable);
             }
             var variable = new VariableSymbol(name, boundExpression.Type);
-
+            _variables[variable] = null;
             return new BoundAssignmentExpression(variable, boundExpression);
         }
 
