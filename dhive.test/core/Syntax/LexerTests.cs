@@ -6,7 +6,7 @@ using Xunit;
 
 namespace dhive.test.core.Syntax
 {
-    public class LexerTest
+    public class LexerTests
     {
         [Theory]
         [MemberData(nameof(GetTokensData))]

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace dhive.core.Syntax{
-    internal static class SyntaxFacts{
+    public static class SyntaxFacts{
         public static int GetBinaryOperatorPrecednce(this SyntaxKind kind){
             switch(kind){
                 case SyntaxKind.PipePipeToken:
@@ -42,6 +42,26 @@ namespace dhive.core.Syntax{
                 default:
                     return SyntaxKind.IndentiferToken;
              }
+        }
+
+        public static string GetText(SyntaxKind kind){
+            switch(kind){
+                case SyntaxKind.PlusToken:return "+";
+                case SyntaxKind.MinusToken: return "-";
+                case SyntaxKind.StarToken: return "*";
+                case SyntaxKind.SlashToken: return "/";
+                case SyntaxKind.ExclamationToken: return "!";
+                case SyntaxKind.EqualEqualToken: return "==";
+                case SyntaxKind.ExclamationEqualToken: return "!=";
+                case SyntaxKind.AmpersandAmpersandToken: return "&&";
+                case SyntaxKind.PipePipeToken: return "||";
+                case SyntaxKind.OpenParenthesisToken: return "(";
+                case SyntaxKind.CloseParenthesisToken: return ")";
+                case SyntaxKind.EqualToken: return "=";
+                case SyntaxKind.FalseKeyword: return "false";
+                case SyntaxKind.TrueKeyword: return "true";
+                default: return "null";
+            }
         }
     }
 }
