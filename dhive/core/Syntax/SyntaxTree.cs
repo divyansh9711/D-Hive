@@ -17,5 +17,16 @@ namespace dhive.core.Syntax{
         public IEnumerable<Diagnostics> Diagnostics {get;}
         public ExpressionSyntax Root {get;}
         public SyntaxToken EndOfFileToken {get;}
+
+        public static IEnumerable<SyntaxToken> ParseToken(string text){
+            var lexer = new Lexer(text);
+            while(true){
+                var token = lexer.Lex();
+                if(token.Kind == SyntaxKind.EndOfFileToken){
+                    break;
+                }
+                yield return token;
+            }
+        }
     }   
 }

@@ -88,8 +88,8 @@ namespace dhive.core.Syntax{
         private ExpressionSyntax ParsePrimaryExpression(){
             switch(Current.Kind){
                 case SyntaxKind.OpenParenthesisToken:{
-                       var left = NextToken();
-                    var expression = ParseBinaryExpression();
+                    var left = NextToken();
+                    var expression = ParseExpression();
                     var right = MatchToken(SyntaxKind.CloseParenthesisToken);
                     return new ParenthesizedExpressionSyntax(left,expression,right);
                 }
@@ -101,11 +101,6 @@ namespace dhive.core.Syntax{
                 }
                 case SyntaxKind.IndentiferToken:{
                     var identifierToken = NextToken();
-                    if(Peek(0).Kind == SyntaxKind.EqualToken){
-                        var operatorToken = NextToken();
-                        var right = ParsePrimaryExpression();
-                        return new AssignmentExpressionSyntax(identifierToken, identifierToken, right); 
-                    }
                     return new NameExpressionSyntax(identifierToken);
                 }
                 default:{

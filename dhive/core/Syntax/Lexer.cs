@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 namespace dhive.core.Syntax{
     internal sealed class Lexer{
@@ -12,7 +13,7 @@ namespace dhive.core.Syntax{
         private char LookAhead => Peek(1);
         private char Peek(int offset){
             var index = _position + offset;
-            if (_position >= _text.Length)
+            if (index >= _text.Length)
                 return '\0';
             return _text[index];
         }
@@ -64,21 +65,21 @@ namespace dhive.core.Syntax{
                 case '&':{
                     if(LookAhead == '&'){
                         _position += 2;
-                        return new SyntaxToken(SyntaxKind.AmpersandToken, start, "&&", null);
+                        return new SyntaxToken(SyntaxKind.AmpersandAmpersandToken, start, "&&", null);
                     } 
                     break;
                 }
                 case '|':{
                     if(LookAhead == '|') {
                         _position += 2;
-                        return new SyntaxToken(SyntaxKind.PipeToken, start, "||", null);
+                        return new SyntaxToken(SyntaxKind.PipePipeToken, start, "||", null);
                     }
                     break;
                 }
                 case '=':{
                     if(LookAhead == '='){
                         _position += 2;                       
-                        return new SyntaxToken(SyntaxKind.ExclamationEqualToken, start, "!=", null);
+                        return new SyntaxToken(SyntaxKind.EqualEqualToken, start, "==", null);
                     } 
                     return new SyntaxToken(SyntaxKind.EqualToken, _position++, "=", null);
                 }
@@ -88,7 +89,8 @@ namespace dhive.core.Syntax{
                          return new SyntaxToken(SyntaxKind.ExclamationEqualToken, start, "!=", null);
 
                     } 
-                    return new SyntaxToken(SyntaxKind.ExclamationToken, _position++, "!", null);
+                    _position += 1;
+                    return new SyntaxToken(SyntaxKind.ExclamationToken, start, "!", null);
                 }
             }
             _diagnostics.ReportUnrecognisedCharacter(_position, Current);
