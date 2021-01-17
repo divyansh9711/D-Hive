@@ -43,6 +43,23 @@ namespace dhive.core.Syntax{
                     return SyntaxKind.IndentiferToken;
              }
         }
+        public static IEnumerable<SyntaxKind> GetBinaryOperatorKinds(){
+            var kinds = (SyntaxKind[]) Enum.GetValues(typeof(SyntaxKind));
+            foreach (var kind in kinds){
+                if(GetUnaryOperatorPrecednce(kind) > 0){
+                    yield return kind;
+                }
+            }
+        }
+
+          public static IEnumerable<SyntaxKind> GetUnaryOperatorKinds(){
+            var kinds = (SyntaxKind[]) Enum.GetValues(typeof(SyntaxKind));
+            foreach (var kind in kinds){
+                if(GetBinaryOperatorPrecednce(kind) > 0){
+                    yield return kind;
+                }
+            }
+        }
 
         public static string GetText(SyntaxKind kind){
             switch(kind){
