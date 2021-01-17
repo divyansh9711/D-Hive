@@ -49,7 +49,6 @@ namespace dhive.test.core.Syntax
             foreach(var op1 in SyntaxFacts.GetBinaryOperatorKinds()){
                 foreach(var op2 in SyntaxFacts.GetBinaryOperatorKinds()){
                     yield return new object[]{op1,op2};
-                    yield break;
                 }
             }
         }    
