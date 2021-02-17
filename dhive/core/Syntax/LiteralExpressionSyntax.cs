@@ -14,9 +14,7 @@ namespace dhive.core.Syntax
         }
         public override SyntaxKind Kind => SyntaxKind.LiteralExpression;
         public object Value { get; }
-        public override IEnumerable<SyntaxNode> GetChildren(){
-            yield return LietralToken;
-        }
+        
         public SyntaxToken LietralToken {get;}    
     }
 

@@ -8,19 +8,19 @@ namespace dhive.core.Binding{
             Syntax = syntax;
             Kind = kind;
             OperandType = operandType;
-            ResultType = resultType;
+            Type = resultType;
         }
         private BoundUnaryOperator(SyntaxKind syntaxKind, BoundUnaryOperatorKind kind, Type operandType)
         {
             SyntaxKind = syntaxKind;
             Kind = kind;
-            OperandType = operandType;
+            Type = operandType;
         }
         public SyntaxKind SyntaxKind { get; }
         public SyntaxKind Syntax { get; }
         public BoundUnaryOperatorKind Kind { get; }
         public Type OperandType { get; }
-        public Type ResultType { get; }
+        public Type Type { get; }
 
         private static BoundUnaryOperator[] _opertors = {
             new BoundUnaryOperator(SyntaxKind.ExclamationToken, BoundUnaryOperatorKind.LogicalNegation, typeof(bool)),
@@ -30,7 +30,7 @@ namespace dhive.core.Binding{
 
         public static BoundUnaryOperator Bind(SyntaxKind syntaxKind, Type operandType){
             foreach(var op in _opertors){
-                if(op.SyntaxKind == syntaxKind && op.OperandType == operandType)
+                if(op.SyntaxKind == syntaxKind && op.Type == operandType)
                     return op;
             }
             return null;
