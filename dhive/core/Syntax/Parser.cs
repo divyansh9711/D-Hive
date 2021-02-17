@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace dhive.core.Syntax{
     internal sealed class Parser{
         private int _position;
         private readonly DiagnosticsBag _diagnostics = new DiagnosticsBag(); 
-        private readonly SyntaxToken[] _tokens;
+        private readonly ImmutableArray<SyntaxToken> _tokens;
         public Parser(String text){
             var tokens = new List<SyntaxToken>();
             var lexer = new Lexer(text);
@@ -16,7 +17,7 @@ namespace dhive.core.Syntax{
                     tokens.Add(token);
                 }
             } while(token.Kind != SyntaxKind.EndOfFileToken);
-            _tokens = tokens.ToArray();
+            _tokens = tokens.ToImmutableArray();
             _diagnostics.AddRange(lexer.Diagnostics);
         }
 
@@ -48,7 +49,7 @@ namespace dhive.core.Syntax{
         public SyntaxTree Parse(){
             var expression = ParseExpression();
             var eofToken = MatchToken(SyntaxKind.EndOfFileToken);
-            return new SyntaxTree(expression, eofToken, _diagnostics);
+            return new SyntaxTree(expression, eofToken, _diagnostics.ToImmutableArray());
         }
 
         private ExpressionSyntax ParseBinaryExpression(int parentPrecedence = 0){

@@ -5,6 +5,7 @@ using core;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace dhive.core{
     public sealed class Compiler{
@@ -17,12 +18,12 @@ namespace dhive.core{
         public EvaluationResult Evaluate(Dictionary<VariableSymbol, object> variables){
             var binder = new Binder(variables);
             var boundExpression = binder.BindExpression(Syntax.Root);
-            var diagnostics = Syntax.Diagnostics.Concat(binder.Diagnostics).ToArray();
+            var diagnostics = Syntax.Diagnostics.Concat(binder.Diagnostics).ToImmutableArray();
             if (diagnostics.Any())
-                return new EvaluationResult(diagnostics,null);
-            var evaluator = new Evaluator(boundExpression,variables);
+                return new EvaluationResult(diagnostics, null);
+            var evaluator = new Evaluator(boundExpression, variables);
             var value = evaluator.Evaluate();
-            return new EvaluationResult(Array.Empty<Diagnostics>(),value);
+            return new EvaluationResult(ImmutableArray<Diagnostics>.Empty, value);
 
         }
     }

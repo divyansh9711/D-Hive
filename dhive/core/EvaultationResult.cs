@@ -1,16 +1,17 @@
 using dhive.core.Syntax;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace dhive.core{
    
      public sealed class EvaluationResult{
-        public EvaluationResult(IEnumerable<Diagnostics> diagnostics, object value){
-            Diagnostics = diagnostics.ToArray();
+        public EvaluationResult(ImmutableArray<Diagnostics> diagnostics, object value){
+            Diagnostics = diagnostics;
             Value = value;
         }
 
-        public IReadOnlyList<Diagnostics> Diagnostics { get; }
+        public ImmutableArray<Diagnostics> Diagnostics { get; }
         public object Value { get; }
     }
 }
