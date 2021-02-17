@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace dhive.core.Syntax{
     internal sealed class Parser{
         private int _position;
-        private DiagnosticsBag _diagnostics = new DiagnosticsBag(); 
+        private readonly DiagnosticsBag _diagnostics = new DiagnosticsBag(); 
         private readonly SyntaxToken[] _tokens;
         public Parser(String text){
             var tokens = new List<SyntaxToken>();
@@ -87,27 +87,45 @@ namespace dhive.core.Syntax{
 
         private ExpressionSyntax ParsePrimaryExpression(){
             switch(Current.Kind){
-                case SyntaxKind.OpenParenthesisToken:{
-                    var left = NextToken();
-                    var expression = ParseExpression();
-                    var right = MatchToken(SyntaxKind.CloseParenthesisToken);
-                    return new ParenthesizedExpressionSyntax(left,expression,right);
-                }
+                case SyntaxKind.OpenParenthesisToken:
+                        return ParseParenthesizedExpression();
                 case SyntaxKind.TrueKeyword:
-                case SyntaxKind.FalseKeyword:{
-                    var keywordToken = NextToken();
-                    var value = keywordToken.Kind == SyntaxKind.TrueKeyword;
-                    return new LiteralExpressionSyntax(keywordToken, value);
-                }
-                case SyntaxKind.IndentiferToken:{
-                    var identifierToken = NextToken();
-                    return new NameExpressionSyntax(identifierToken);
-                }
-                default:{
-                    var numberToken = MatchToken(SyntaxKind.NumberToken);
-                    return new LiteralExpressionSyntax(numberToken);
-                }
+                case SyntaxKind.FalseKeyword:
+                        return ParseBooleanLiteral();
+                case SyntaxKind.NumberToken:
+                    return ParseNumberLiteral();
+                case SyntaxKind.IndentiferToken:
+                default:
+                        return ParseNameExpression();
+
             }
+        }
+
+        private ExpressionSyntax ParseNumberLiteral()
+        {
+            var numberToken = MatchToken(SyntaxKind.NumberToken);
+            return new LiteralExpressionSyntax(numberToken);
+        }
+
+        private ExpressionSyntax ParseParenthesizedExpression()
+        {
+            var left = MatchToken(SyntaxKind.OpenParenthesisToken);
+            var expression = ParseExpression();
+            var right = MatchToken(SyntaxKind.CloseParenthesisToken);
+            return new ParenthesizedExpressionSyntax(left, expression, right);
+        }
+
+        private ExpressionSyntax ParseBooleanLiteral()
+        {
+            var isTrue = Current.Kind == SyntaxKind.TrueKeyword;
+            var keywordToken = isTrue ? MatchToken(SyntaxKind.TrueKeyword) : MatchToken(SyntaxKind.FalseKeyword);
+            return new LiteralExpressionSyntax(keywordToken, isTrue);
+        }
+
+        private ExpressionSyntax ParseNameExpression()
+        {
+            var identifierToken = MatchToken(SyntaxKind.IndentiferToken);
+            return new NameExpressionSyntax(identifierToken);
         }
     }
     
