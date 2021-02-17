@@ -8,6 +8,18 @@ namespace dhive.test.core.Syntax
 {
     public class LexerTests
     {
+        [Fact]
+        [MemberData(nameof(GetTokensData))]
+        public void Lexer_Lex_Test_AllTokens(){
+            var tokenKinds = Enum.GetValues(typeof(SyntaxKind)).Cast<SyntaxKind>().Where(k => k.ToString().EndsWith("Keyword") || k.ToString().EndsWith("Token")).ToList();
+            var testedTokensKinds = GetTokens().Concat(GetSeparators()).Select(t => t.kind);
+            var untestedTokensKinds = new SortedSet<SyntaxKind>(tokenKinds);
+            untestedTokensKinds.Remove(SyntaxKind.NoneToken);
+            untestedTokensKinds.Remove(SyntaxKind.EndOfFileToken);
+            untestedTokensKinds.ExceptWith(testedTokensKinds);
+            Assert.Empty(untestedTokensKinds);
+        }
+
         [Theory]
         [MemberData(nameof(GetTokensData))]
         public void Lexer_Lex_Test(SyntaxKind kind, string text){
@@ -62,27 +74,15 @@ namespace dhive.test.core.Syntax
         }
 
         private static IEnumerable<(SyntaxKind kind,string text)> GetTokens(){
-            return new[]{
-                (SyntaxKind.PlusToken, "+"),
-                (SyntaxKind.MinusToken, "-"),
-                (SyntaxKind.StarToken, "*"),
-                (SyntaxKind.SlashToken, "/"),
-                (SyntaxKind.ExclamationToken, "!"),
-                (SyntaxKind.EqualEqualToken, "=="),
-                (SyntaxKind.ExclamationEqualToken, "!="),
-                (SyntaxKind.AmpersandAmpersandToken, "&&"),
-                (SyntaxKind.PipePipeToken, "||"),
-                (SyntaxKind.OpenParenthesisToken, "("),
-                (SyntaxKind.CloseParenthesisToken, ")"),
-                (SyntaxKind.EqualToken, "="),
-                (SyntaxKind.FalseKeyword, "false"),
-                (SyntaxKind.TrueKeyword, "true"),
+            var fixedTokens = Enum.GetValues(typeof(SyntaxKind)).Cast<SyntaxKind>().Select(k => (kind: k, text: SyntaxFacts.GetText(k))).Where(t => t.text != null);
+            var dynamicTokens =  new[]{
                 (SyntaxKind.IndentiferToken, "abc"),
                 (SyntaxKind.IndentiferToken, "a"),
                 (SyntaxKind.NumberToken, "1"),
                 (SyntaxKind.NumberToken, "23"),
                 
             };
+            return fixedTokens.Concat(dynamicTokens);
 
         }
 
