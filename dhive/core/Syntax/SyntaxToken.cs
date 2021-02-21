@@ -16,7 +16,7 @@ namespace dhive.core.Syntax
         public int Position {get;}
         public string Text {get;}
         public Object Value {get;}
-        public TextSpan Span => new TextSpan(Position, Text.Length);
+        public override TextSpan Span => new TextSpan(Position, Text.Length);
 
         
     }
