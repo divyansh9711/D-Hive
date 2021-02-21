@@ -1,6 +1,6 @@
 using System;
 
-namespace dhive.core
+namespace dhive.core.Text
 {
     public struct TextSpan{
         public TextSpan(int start, int length){

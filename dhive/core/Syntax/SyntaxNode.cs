@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using dhive.core.Text;
 
 namespace dhive.core.Syntax{
     public abstract class SyntaxNode

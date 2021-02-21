@@ -2,6 +2,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System;
 using System.Collections.Generic;
+using dhive.core.Text;
 
 namespace dhive.core.Syntax
 {
