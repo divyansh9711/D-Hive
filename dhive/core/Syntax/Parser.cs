@@ -20,6 +20,7 @@ namespace dhive.core.Syntax{
             } while(token.Kind != SyntaxKind.EndOfFileToken);
             _tokens = tokens.ToImmutableArray();
             _diagnostics.AddRange(lexer.Diagnostics);
+            _text = text;
         }
 
         public IEnumerable<Diagnostics> Diagnostics => _diagnostics;
@@ -32,6 +33,8 @@ namespace dhive.core.Syntax{
         }
 
         private SyntaxToken Current => Peek(0);
+
+        public SourceText _text { get; }
 
         private SyntaxToken NextToken(){
             var current = Current;
@@ -50,7 +53,7 @@ namespace dhive.core.Syntax{
         public SyntaxTree Parse(){
             var expression = ParseExpression();
             var eofToken = MatchToken(SyntaxKind.EndOfFileToken);
-            return new SyntaxTree(expression, eofToken, _diagnostics.ToImmutableArray());
+            return new SyntaxTree(expression, eofToken, _diagnostics.ToImmutableArray(), _text);
         }
 
         private ExpressionSyntax ParseBinaryExpression(int parentPrecedence = 0){

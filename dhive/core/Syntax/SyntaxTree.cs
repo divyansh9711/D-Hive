@@ -7,8 +7,9 @@ using dhive.core.Text;
 
 namespace dhive.core.Syntax{
     public sealed class SyntaxTree{
-        public SyntaxTree(ExpressionSyntax root, SyntaxToken endOfFileToken, ImmutableArray<Diagnostics> diagnostics){
+        public SyntaxTree(ExpressionSyntax root, SyntaxToken endOfFileToken, ImmutableArray<Diagnostics> diagnostics, SourceText text){
             Diagnostics = diagnostics;
+            Text = text;
             Root = root;
             EndOfFileToken = endOfFileToken;
         }
@@ -22,6 +23,7 @@ namespace dhive.core.Syntax{
             return parser.Parse();
         }
         public ImmutableArray<Diagnostics> Diagnostics {get;}
+        public SourceText Text { get; }
         public ExpressionSyntax Root {get;}
         public SyntaxToken EndOfFileToken {get;}
 
