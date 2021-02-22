@@ -3,65 +3,109 @@ using System;
 using dhive.core.Syntax;
 using dhive.core;
 using System.Collections.Generic;
+using System.Text;
+using dhive.core.Text;
 
 namespace core
 {
     internal static class Program
     {
-        static void Main(){
+        private static void Main()
+        {
             var showTree = false;
             var variables = new Dictionary<VariableSymbol, object>();
-            while (true){
-                Console.Write(">");
-                var line = Console.ReadLine();
-                if (string.IsNullOrWhiteSpace(line))
-                    return;
-                if (line == "$showtree") {
-                    showTree = !showTree;
-                    Console.WriteLine(showTree ? "Showing parse tree" : "Not Showing ParseTree");
-                    continue;
+            var textBuilder = new StringBuilder();
+
+            while (true)
+            {
+                if (textBuilder.Length == 0)
+                    Console.Write("> ");
+                else
+                    Console.Write("| ");
+
+                var input = Console.ReadLine();
+                var isBlank = string.IsNullOrWhiteSpace(input);
+
+                if (textBuilder.Length == 0)
+                {
+                    if (isBlank)
+                    {
+                        break;
+                    }
+                    else if (input == "#showTree")
+                    {
+                        showTree = !showTree;
+                        Console.WriteLine(showTree ? "Showing parse trees." : "Not showing parse trees");
+                        continue;
+                    }
+                    else if (input == "#cls")
+                    {
+                        Console.Clear();
+                        continue;
+                    }
                 }
-                else if (line == "$cls"){
-                    Console.Clear();
+
+                textBuilder.AppendLine(input);
+                var text = textBuilder.ToString();
+
+                var syntaxTree = SyntaxTree.Parse(text);
+
+                if (!isBlank && syntaxTree.Diagnostics.Any())
                     continue;
-                }
-                var syntaxTree = SyntaxTree.Parse(line);
-                var compiler = new Compiler(syntaxTree);
-                var result = compiler.Evaluate(variables);
-                var diagnostics = result.Diagnostics;
-                if (showTree) {
+
+                var compilation = new Compiler(syntaxTree);
+                var result = compilation.Evaluate(variables);
+
+                if (showTree)
+                {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     syntaxTree.Root.WriteTo(Console.Out);
                     Console.ResetColor();
                 }
-                if (!result.Diagnostics.Any()){
+
+                if (!result.Diagnostics.Any())
+                {
                     Console.WriteLine(result.Value);
                 }
-                else {
-                    var text = syntaxTree.Text;
-                    foreach (var diagnostic in diagnostics)
+                else
+                {
+                    foreach (var diagnostic in result.Diagnostics)
                     {
-                        var lineIndex = text.GetLineIndex(diagnostic.Span.Start);
-                        var lineNumber =  lineIndex + 1;
-                        var character = diagnostic.Span.Start - text.Lines[lineIndex].Start + 1;
+                        var lineIndex = syntaxTree.Text.GetLineIndex(diagnostic.Span.Start);
+                        var line = syntaxTree.Text.Lines[lineIndex];
+                        var lineNumber = lineIndex + 1;
+                        var character = diagnostic.Span.Start - line.Start + 1;
+
                         Console.WriteLine();
+
                         Console.ForegroundColor = ConsoleColor.DarkRed;
                         Console.Write($"({lineNumber}, {character}): ");
                         Console.WriteLine(diagnostic);
                         Console.ResetColor();
-                        var prefix = line.Substring(0, diagnostic.Span.Start);
-                        var error = line.Substring(diagnostic.Span.Start, diagnostic.Span.Length);
-                        var suffix = line.Substring(diagnostic.Span.End);
+
+                        var prefixSpan = TextSpan.FromBounds(line.Start, diagnostic.Span.Start);
+                        var suffixSpan = TextSpan.FromBounds(diagnostic.Span.End, line.End);
+
+                        var prefix = syntaxTree.Text.ToString(prefixSpan);
+                        var error = syntaxTree.Text.ToString(diagnostic.Span);
+                        var suffix = syntaxTree.Text.ToString(suffixSpan);
+
                         Console.Write("    ");
                         Console.Write(prefix);
+
                         Console.ForegroundColor = ConsoleColor.DarkRed;
                         Console.Write(error);
                         Console.ResetColor();
+
                         Console.Write(suffix);
+
                         Console.WriteLine();
                     }
-                    Console.ResetColor();
+
+                    Console.WriteLine();
                 }
+
+                textBuilder.Clear();
             }
         }
     }
