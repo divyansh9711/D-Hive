@@ -1,4 +1,5 @@
 using System;
+using dhive.core.Text;
 
 namespace dhive.core
 {

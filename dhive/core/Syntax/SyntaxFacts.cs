@@ -77,7 +77,7 @@ namespace dhive.core.Syntax{
                 case SyntaxKind.EqualToken: return "=";
                 case SyntaxKind.FalseKeyword: return "false";
                 case SyntaxKind.TrueKeyword: return "true";
-                default: return "null";
+                default: return null;
             }
         }
     }

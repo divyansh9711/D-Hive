@@ -2,6 +2,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System;
 using System.Collections.Generic;
+using dhive.core.Text;
 
 namespace dhive.core.Syntax
 {
@@ -16,10 +17,8 @@ namespace dhive.core.Syntax
         public int Position {get;}
         public string Text {get;}
         public Object Value {get;}
-        public TextSpan Span => new TextSpan(Position, Text.Length);
+        public override TextSpan Span => new TextSpan(Position, Text?.Length ?? 0);
 
-        public override IEnumerable<SyntaxNode> GetChildren(){
-            return Enumerable.Empty<SyntaxNode>();
-        }
+        
     }
 }

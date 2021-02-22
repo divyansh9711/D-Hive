@@ -3,6 +3,7 @@ using System.Collections;
 using dhive.core;
 using System;
 using dhive.core.Syntax;
+using dhive.core.Text;
 
 namespace dhive.core
 {

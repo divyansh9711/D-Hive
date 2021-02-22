@@ -10,7 +10,7 @@ namespace dhive.test.core.Syntax
         [MemberData(nameof(GetSyntaxKindData))]
         public void SyntaxFact_GetText_RoundTrips(SyntaxKind kind){
             var text = SyntaxFacts.GetText(kind);
-            if (text == "null")
+            if (text == null)
                 return;
             var tokens = SyntaxTree.ParseToken(text);
             var token = Assert.Single(tokens);
