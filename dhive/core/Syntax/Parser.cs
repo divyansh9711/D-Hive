@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using dhive.core.Text;
 
 namespace dhive.core.Syntax{
     internal sealed class Parser{
         private int _position;
         private readonly DiagnosticsBag _diagnostics = new DiagnosticsBag(); 
         private readonly ImmutableArray<SyntaxToken> _tokens;
-        public Parser(String text){
+        public Parser(SourceText text){
             var tokens = new List<SyntaxToken>();
             var lexer = new Lexer(text);
             SyntaxToken token;
