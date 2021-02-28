@@ -18,11 +18,12 @@ namespace core
 
             while (true)
             {
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 if (textBuilder.Length == 0)
-                    Console.Write("> ");
+                    Console.Write("» ");
                 else
-                    Console.Write("| ");
-
+                    Console.Write("· ");
+                Console.ResetColor();
                 var input = Console.ReadLine();
                 var isBlank = string.IsNullOrWhiteSpace(input);
 
@@ -65,7 +66,9 @@ namespace core
 
                 if (!result.Diagnostics.Any())
                 {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
                     Console.WriteLine(result.Value);
+                    Console.ResetColor();
                 }
                 else
                 {
